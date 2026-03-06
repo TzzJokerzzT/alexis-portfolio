@@ -1,10 +1,25 @@
 import { motion } from "motion/react";
 
-export const Logo = ({ logoUrl }: { logoUrl: string }) => {
+interface LogoProps {
+  logoUrl: string;
+  altText?: string;
+}
+
+/**
+ * Logo Component with Accessibility
+ *
+ * Implements:
+ * - WCAG 1.1.1: Non-text Content - meaningful alt text
+ * - Descriptive alternative text that identifies the website/brand
+ */
+export const Logo = ({
+  logoUrl,
+  altText = "Alexis Buelvas Portfolio",
+}: LogoProps) => {
   return (
     <motion.img
       src={logoUrl}
-      alt="Logo"
+      alt={altText}
       className="h-8 md:h-20"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
