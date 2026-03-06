@@ -1,6 +1,15 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 
+/**
+ * Preloader Component with Accessibility Support
+ *
+ * Implements:
+ * - aria-busy to indicate loading state
+ * - aria-live region for loading announcements
+ * - Hidden from assistive tech when animation is purely decorative
+ * - Proper role for status indication
+ */
 export function Preloader() {
   const [isLoading, setIsLoading] = useState(true);
 
@@ -21,8 +30,18 @@ export function Preloader() {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5, delay: 0.35 }}
+          role="alert"
+          aria-busy="true"
+          aria-label="Loading page content"
         >
-          <div className="la-ball-triangle-path text-primary">
+          {/* Screen reader announcement */}
+          <span className="sr-only">Loading, please wait...</span>
+
+          {/* Decorative loading animation - hidden from assistive tech */}
+          <div
+            className="la-ball-triangle-path text-primary"
+            aria-hidden="true"
+          >
             <motion.div
               className="w-2.5 h-2.5 rounded-full bg-current absolute"
               animate={{
