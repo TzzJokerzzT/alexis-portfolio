@@ -11,7 +11,7 @@ export function ServicesSection() {
 
   return (
     <>
-      <section id="services" className="py-20 bg-white">
+      <section id="experience" className="py-20 bg-white">
         <Container>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
             {/* Left Column - Testimonial */}
