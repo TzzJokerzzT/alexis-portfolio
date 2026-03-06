@@ -23,7 +23,10 @@ function groupSkillsByCategory(skills: Skill[]): Record<string, Skill[]> {
 
 export function TestimonialsSection() {
   const skillsByCategory = useMemo(() => groupSkillsByCategory(skills), []);
-  const categories = useMemo(() => Object.keys(skillsByCategory), [skillsByCategory]);
+  const categories = useMemo(
+    () => Object.keys(skillsByCategory),
+    [skillsByCategory],
+  );
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -64,7 +67,7 @@ export function TestimonialsSection() {
   return (
     <section
       id="skills"
-      className="py-20 bg-cover bg-center bg-fixed relative text-center overflow-hidden"
+      className="py-20 bg-cover bg-center bg-fixed relative text-center overflow-hidden sm:min-h-[950px] lg:min-h-[200px] "
       style={{
         backgroundImage: "url('/images/banner-images/banner-image-1.jpg')",
       }}
@@ -87,7 +90,9 @@ export function TestimonialsSection() {
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
           >
-            <h3 className="text-white/70 text-sm tracking-[0.3em] uppercase mb-2">EXPERTISE</h3>
+            <h3 className="text-white/70 text-sm tracking-[0.3em] uppercase mb-2">
+              EXPERTISE
+            </h3>
             <h2 className="text-[34px] font-bold text-white leading-tight">
               Skills & Technologies
             </h2>
@@ -133,8 +138,11 @@ export function TestimonialsSection() {
               <button
                 key={category}
                 onClick={() => setCurrentIndex(index)}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${index === currentIndex ? "bg-primary w-6" : "bg-white/40 hover:bg-white/60"
-                  }`}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  index === currentIndex
+                    ? "bg-primary w-6"
+                    : "bg-white/40 hover:bg-white/60"
+                }`}
                 aria-label={`Go to ${category}`}
                 type="button"
               />
@@ -143,7 +151,7 @@ export function TestimonialsSection() {
         </Container>
 
         {/* Skills Carousel - Full width */}
-        <div className="min-h-[200px] max-h-[400px] flex items-center">
+        <div className="min-h-[650px] max-h-[400px] flex items-start lg:min-h-[200px] lg:items-center">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentCategory}
@@ -170,7 +178,9 @@ export function TestimonialsSection() {
                       loading="lazy"
                     />
                   </div>
-                  <span className="text-white text-sm font-medium text-center">{skill.name}</span>
+                  <span className="text-white text-sm font-medium text-center">
+                    {skill.name}
+                  </span>
                 </motion.div>
               ))}
             </motion.div>
