@@ -1,6 +1,6 @@
-import { motion } from "motion/react";
-import { Container, Button } from "@/shared/components/ui";
+import { Container } from "@/shared/components/ui";
 import { basics } from "@/shared/data/data.json";
+import { motion } from "motion/react";
 
 export function HeroSection() {
   return (

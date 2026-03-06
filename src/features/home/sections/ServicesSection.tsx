@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { Container, Button } from "@/shared/components/ui";
+import { Button, Container } from "@/shared/components/ui";
 import { useRandomQuote } from "@/shared/hooks";
-import { Play, X } from "lucide-react";
+import { X } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export function ServicesSection() {
