@@ -1,7 +1,6 @@
 import { useProject } from "@/shared/api/hooks/useProject";
 import ProjectCard from "@/shared/components/ProjectCard";
 import { Container } from "@/shared/components/ui";
-import { getImageUrl } from "@/shared/utils/imageUrl";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
