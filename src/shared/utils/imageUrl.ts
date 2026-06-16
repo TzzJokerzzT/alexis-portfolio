@@ -1,5 +1,5 @@
 const API_BASE = (
-  import.meta.env.VITE_API_URL || "http://127.0.0.1:3001/api"
+  import.meta.env.VITE_API_URL || "http://localhost:3001"
 ).replace(/\/api$/, "");
 
 export function getImageUrl(path: string): string {

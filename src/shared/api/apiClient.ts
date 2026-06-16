@@ -2,7 +2,7 @@ import axios, { type AxiosInstance, type AxiosResponse } from "axios";
 
 const createApiClient = (): AxiosInstance => {
   const client = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || "http://127.0.0.3:3001",
+    baseURL: import.meta.env.VITE_API_URL || "http://localhost:3001",
     headers: {
       "Content-Type": "application/json",
     },
