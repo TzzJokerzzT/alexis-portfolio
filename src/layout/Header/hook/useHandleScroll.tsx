@@ -17,7 +17,6 @@ export const useHandleScroll = () => {
           const rect = element.getBoundingClientRect();
           if (rect.top <= 150) {
             setActiveSection(sectionId);
-            console.log("Active Section:", sectionId);
             break;
           }
         }

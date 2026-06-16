@@ -1,14 +1,16 @@
 import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Container } from "@/shared/components/ui";
-import { skills } from "@/features/home/utils/constants/Skills";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
-type Skill = (typeof skills)[number];
+import { useSkills } from "@/shared/api/hooks/useSkill";
+import type { SkillListResponse } from "@/shared/api/types";
 
 const AUTO_PLAY_INTERVAL = 5000;
 
-function groupSkillsByCategory(skills: Skill[]): Record<string, Skill[]> {
+function groupSkillsByCategory(
+  skills: SkillListResponse[] | undefined,
+): Record<string, SkillListResponse[]> {
+  if (!skills) return {};
   return skills.reduce(
     (acc, skill) => {
       if (!acc[skill.category]) {
@@ -17,12 +19,13 @@ function groupSkillsByCategory(skills: Skill[]): Record<string, Skill[]> {
       acc[skill.category].push(skill);
       return acc;
     },
-    {} as Record<string, Skill[]>,
+    {} as Record<string, SkillListResponse[]>,
   );
 }
 
 export function TestimonialsSection() {
-  const skillsByCategory = useMemo(() => groupSkillsByCategory(skills), []);
+  const { data } = useSkills();
+  const skillsByCategory = useMemo(() => groupSkillsByCategory(data), [data]);
   const categories = useMemo(
     () => Object.keys(skillsByCategory),
     [skillsByCategory],
@@ -136,7 +139,7 @@ export function TestimonialsSection() {
           <div className="flex justify-center gap-2 mb-10">
             {categories.map((category, index) => (
               <button
-                key={category}
+                key={index}
                 onClick={() => setCurrentIndex(index)}
                 className={`w-2 h-2 rounded-full transition-all duration-300 ${
                   index === currentIndex
@@ -161,7 +164,7 @@ export function TestimonialsSection() {
               exit={{ opacity: 0, x: -50 }}
               transition={{ duration: 0.3 }}
             >
-              {currentSkills.map((skill, index) => (
+              {currentSkills?.map((skill, index) => (
                 <motion.div
                   key={skill.name}
                   className="flex flex-col items-center gap-3 p-4 rounded-lg bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-colors w-[120px] sm:w-[140px]"

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { Quotes } from "@/features/home/utils/constants/Quotes";
+import type { QuoteListResponse } from "../api/types";
 
 const INTERVAL_MS = 10000; // 10 seconds
 
@@ -14,12 +14,17 @@ function getRandomIndex(length: number, excludeIndex?: number): number {
   return newIndex;
 }
 
-export function useRandomQuote(intervalMs: number = INTERVAL_MS) {
-  const [currentIndex, setCurrentIndex] = useState(() => getRandomIndex(Quotes.length));
+export function useRandomQuote(
+  intervalMs: number = INTERVAL_MS,
+  quotes: QuoteListResponse[],
+) {
+  const [currentIndex, setCurrentIndex] = useState(() =>
+    getRandomIndex(quotes.length),
+  );
 
   const selectRandomQuote = useCallback(() => {
-    setCurrentIndex((prev) => getRandomIndex(Quotes.length, prev));
-  }, []);
+    setCurrentIndex((prev) => getRandomIndex(quotes.length, prev));
+  }, [quotes.length]);
 
   useEffect(() => {
     const interval = setInterval(selectRandomQuote, intervalMs);
@@ -27,7 +32,7 @@ export function useRandomQuote(intervalMs: number = INTERVAL_MS) {
   }, [intervalMs, selectRandomQuote]);
 
   return {
-    quote: Quotes[currentIndex],
+    quote: quotes[currentIndex],
     currentIndex,
     selectRandomQuote,
   };
