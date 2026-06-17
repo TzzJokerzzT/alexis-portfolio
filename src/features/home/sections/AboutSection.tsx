@@ -1,8 +1,14 @@
 import { motion } from "motion/react";
 import { Container } from "@/shared/components/ui";
-import { features } from "../utils/constants/AboutData";
+import { useAboutMe } from "@/shared/api/hooks/useAboutMe";
+import * as LucideIcons from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 export function AboutSection() {
+  const { data } = useAboutMe();
+  const getIcon = (name: string): LucideIcon =>
+    (LucideIcons[name as keyof typeof LucideIcons] as LucideIcon) ??
+    LucideIcons.HelpCircle;
   return (
     <section id="about" className="introduction py-20 bg-white">
       <Container>
@@ -16,14 +22,14 @@ export function AboutSection() {
             transition={{ duration: 0.6 }}
           >
             <div className="section-heading">
-              <h3 className="text-text-light text-sm tracking-[0.3em] uppercase mb-2">ABOUT ME</h3>
+              <h3 className="text-text-light text-sm tracking-[0.3em] uppercase mb-2">
+                ABOUT ME
+              </h3>
               <h2 className="text-[34px] font-bold text-text-primary leading-tight mb-4">
-                HOW IS ALEXIS APART FROM BE FRONTEND DEVELOPER?
+                {data?.title}
               </h2>
               <p className="text-text-subtle text-base font-light leading-relaxed">
-                I am a passionate for learn something about new cultures, for that reason I always
-                try to learn something about diferent cultures and languages, also I like to be in
-                contact with people from diferent culture.
+                {data?.description}
               </p>
             </div>
           </motion.div>
@@ -31,7 +37,7 @@ export function AboutSection() {
           {/* Right Column - Icon Blocks (col-2-3 = 66.66%) */}
           <div className="lg:w-2/3">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {features.map((feature, index) => (
+              {data?.about.map((feature, index) => (
                 <motion.div
                   key={feature.title}
                   className="icon-block flex flex-col items-center text-center p-5"
@@ -45,11 +51,18 @@ export function AboutSection() {
                     whileHover={{ scale: 1.1, rotate: 5 }}
                     transition={{ type: "spring", stiffness: 300 }}
                   >
-                    <feature.icon size={48} strokeWidth={1.5} />
+                    {(() => {
+                      const Icon = getIcon(feature.icon);
+                      return <Icon size={48} strokeWidth={1.5} />;
+                    })()}
                   </motion.div>
                   <div className="icon-block-description">
-                    <h4 className="text-lg font-normal text-text-primary mb-3">{feature.title}</h4>
-                    <p className="text-text-muted text-sm leading-relaxed">{feature.description}</p>
+                    <h4 className="text-lg font-normal text-text-primary mb-3">
+                      {feature.title}
+                    </h4>
+                    <p className="text-text-muted text-sm leading-relaxed">
+                      {feature.description}
+                    </p>
                   </div>
                 </motion.div>
               ))}

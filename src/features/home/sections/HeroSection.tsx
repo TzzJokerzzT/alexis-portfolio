@@ -1,8 +1,9 @@
+import { useIntroduction } from "@/shared/api/hooks/useIntroduction";
 import { Container } from "@/shared/components/ui";
-import { basics } from "@/shared/data/data.json";
 import { motion } from "motion/react";
 
 export function HeroSection() {
+  const { data } = useIntroduction();
   return (
     <section
       id="home"
@@ -29,11 +30,11 @@ export function HeroSection() {
             />
 
             <h1 className="text-4xl md:text-5xl lg:text-[62px] font-extrabold leading-tight text-text-primary mb-6">
-              {`HI, I'M ${basics.name.toUpperCase()} FRONTEND DEVELOPER `}
+              {data?.title}
             </h1>
 
             <h2 className="text-base md:text-lg font-light text-text-primary mb-10 leading-relaxed">
-              {basics.summary}
+              {data?.description}
             </h2>
           </motion.div>
 

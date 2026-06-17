@@ -1,75 +1,95 @@
-# React + TypeScript + Vite
+# Alexis Buelvas — Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Portfolio personal como Frontend Developer. Single Page Application que muestra experiencia profesional, proyectos, habilidades, servicios y datos de contacto, consumiendo datos dinámicos desde una API REST propia.
 
-Currently, two official plugins are available:
+## 🧠 Descripción
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+El sitio funciona como una _landing page_ de una sola página con navegación por secciones (scroll spy), animaciones fluidas y datos obtenidos en tiempo real desde un backend dedicado. Cada sección del home —Hero, About, Experience, Gallery, Services, Testimonials, Contact— se alimenta de endpoints independientes gestionados con **React Query**, lo que permite modificar el contenido sin redesplegar el frontend.
 
-## React Compiler
+Incluye también una página de documentación (`/docs`) para la librería pública de componentes [`@lzzjokerzzl/react-ui-components`](https://www.npmjs.com/package/@lzzjokerzzl/react-ui-components).
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## 🛠️ Tecnologías
 
-Note: This will impact Vite dev & build performances.
+| Capa                 | Herramienta                                                                                          |
+| -------------------- | ---------------------------------------------------------------------------------------------------- |
+| **Runtime**          | [Bun](https://bun.sh)                                                                                |
+| **Build**            | [Vite 8](https://vite.dev)                                                                           |
+| **UI**               | [React 19](https://react.dev) + TypeScript                                                           |
+| **Estilos**          | [Tailwind CSS 4](https://tailwindcss.com)                                                            |
+| **Ruteo**            | [React Router 7](https://reactrouter.com)                                                            |
+| **Animaciones**      | [Motion](https://motion.dev) (Framer Motion)                                                         |
+| **Datos remotos**    | [TanStack React Query 5](https://tanstack.com/query)                                                 |
+| **HTTP**             | [Axios](https://axios-http.com)                                                                      |
+| **Íconos**           | [Lucide React](https://lucide.dev)                                                                   |
+| **Librería propia**  | [`@lzzjokerzzl/react-ui-components`](https://www.npmjs.com/package/@lzzjokerzzl/react-ui-components) |
+| **Linting**          | ESLint + Prettier                                                                                    |
+| **Compilador React** | babel-plugin-react-compiler (React Compiler)                                                         |
 
-## Expanding the ESLint configuration
+## 🏗️ Arquitectura
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+El proyecto sigue una arquitectura **modular por feature** con separación clara de responsabilidades, inspirada en principios de Clean Architecture y Feature-Sliced Design adaptados al frontend.
 
-```js
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```
+src/
+├── features/          # Módulos de dominio (home, ...)
+│   └── home/
+│       ├── sections/  # Componentes de cada sección del landing
+│       └── utils/     # Constantes, helpers y tipos locales
+├── pages/             # Páginas de alto nivel (entry points de rutas)
+├── view/              # Vistas compuestas que orquestan secciones
+├── layout/            # Layout global (Header, Footer, ScrollUp, Preloader)
+├── shared/            # Capa transversal reutilizable
+│   ├── api/           # Cliente HTTP, tipos, servicios y hooks de React Query
+│   ├── components/    # Componentes genéricos (UI kit, ProjectCard, ExperienceCard)
+│   ├── hooks/         # Hooks compartidos (useRandomQuote)
+│   ├── data/          # Datos estáticos residuales (socialLinks)
+│   └── utils/         # Utilidades (imageUrl)
+├── routes/            # Configuración de rutas (React Router)
+├── App.tsx            # Punto de entrada de la aplicación
+└── main.tsx           # Bootstrap: QueryClientProvider + BrowserRouter
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Flujo de datos
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
-
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
 ```
+[API REST] ←─ axios ── [api/services] ←─ React Query ── [api/hooks] ──→ [Sections]
+```
+
+1. **`apiClient.ts`**: instancia de Axios con `baseURL` configurable por variable de entorno (`VITE_API_URL`).
+2. **`services/`**: funciones puras que llaman a cada endpoint del backend.
+3. **`hooks/`**: wrappers de React Query (`useQuery`) con estrategia de caché y stale time definidos por dominio.
+4. **`sections/`**: componentes de presentación que consumen los hooks y renderizan los datos, delegando la lógica de carga y error a React Query.
+
+### Decisiones de diseño
+
+- **Separación API ↔ UI**: los hooks de datos no conocen detalles de presentación; los componentes de sección no conocen detalles de HTTP.
+- **Componentes extraídos**: `ExperienceCard` y `ProjectCard` se movieron a `shared/components/` para ser reutilizables fuera de sus secciones originales.
+- **CORS en desarrollo**: Vite proxy (`/api` → `localhost:3001`) para evitar problemas de CORS en local.
+- **React Compiler**: activado para optimizar re-renders sin `useMemo`/`useCallback` manuales.
+
+## 🚀 Desarrollo local
+
+```bash
+# Instalar dependencias
+bun install
+
+# Levantar servidor de desarrollo
+bun dev
+
+# Build de producción
+bun run build
+
+# Lint y formato
+bun lint
+bun format
+```
+
+### Variables de entorno
+
+| Variable       | Descripción          | Default local           |
+| -------------- | -------------------- | ----------------------- |
+| `VITE_API_URL` | URL base del backend | `http://localhost:3001` |
+
+## 📦 Deploy
+
+El frontend está desplegado en [Vercel](https://vercel.com). La variable `VITE_API_URL` debe configurarse en el dashboard de Vercel apuntando a la URL del backend en producción.

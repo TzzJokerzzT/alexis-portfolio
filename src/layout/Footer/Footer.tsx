@@ -1,3 +1,4 @@
+import { usePersonalInformation } from "@/shared/api/hooks/usePersonalInformation";
 import { Container } from "@/shared/components/ui";
 import { socialLinks } from "@/shared/data/socialLinks";
 
@@ -13,6 +14,7 @@ import { socialLinks } from "@/shared/data/socialLinks";
  * - Proper nav landmark for social links
  */
 export function Footer() {
+  const { data } = usePersonalInformation();
   const currentYear = new Date().getFullYear();
 
   return (
@@ -34,7 +36,7 @@ export function Footer() {
               rel="noopener noreferrer"
               className="text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-sm"
             >
-              Alexis Buelvas
+              {data?.basic.name}
               <span className="sr-only"> (opens in new tab)</span>
             </a>
           </p>

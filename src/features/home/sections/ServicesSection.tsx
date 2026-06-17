@@ -1,3 +1,5 @@
+import { usePersonalInformation } from "@/shared/api/hooks/usePersonalInformation";
+import { useQuotes } from "@/shared/api/hooks/useQuote";
 import { Button, Container } from "@/shared/components/ui";
 import { useRandomQuote } from "@/shared/hooks";
 import { X } from "lucide-react";
@@ -6,8 +8,11 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export function ServicesSection() {
+  const { data } = useQuotes();
+  const { data: personalInformation } = usePersonalInformation();
+  const { personalExperience } = personalInformation || {};
   const [isVideoOpen, setIsVideoOpen] = useState(false);
-  const { quote } = useRandomQuote(10000);
+  const { quote } = useRandomQuote(10000, data || []);
 
   return (
     <>
@@ -23,30 +28,34 @@ export function ServicesSection() {
               transition={{ duration: 0.6 }}
             >
               <blockquote className="testimonial bigtest">
-                <AnimatePresence mode="wait">
-                  <motion.p
-                    key={quote.key}
-                    className="text-xl md:text-[22px] font-light text-text-primary leading-relaxed italic mb-4"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.4 }}
-                  >
-                    "{quote.text}"
-                  </motion.p>
-                </AnimatePresence>
-                <AnimatePresence mode="wait">
-                  <motion.footer
-                    key={quote.key}
-                    className="text-text-muted text-sm"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3, delay: 0.1 }}
-                  >
-                    — <span className="text-primary">{quote.author}</span>
-                  </motion.footer>
-                </AnimatePresence>
+                {quote && (
+                  <>
+                    <AnimatePresence mode="wait">
+                      <motion.p
+                        key={quote.id}
+                        className="text-xl md:text-[22px] font-light text-text-primary leading-relaxed italic mb-4"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.4 }}
+                      >
+                        "{quote.description}"
+                      </motion.p>
+                    </AnimatePresence>
+                    <AnimatePresence mode="wait">
+                      <motion.footer
+                        key={quote.id}
+                        className="text-text-muted text-sm"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3, delay: 0.1 }}
+                      >
+                        — <span className="text-primary">{quote.author}</span>
+                      </motion.footer>
+                    </AnimatePresence>
+                  </>
+                )}
               </blockquote>
             </motion.div>
 
@@ -62,29 +71,12 @@ export function ServicesSection() {
                   EXPERIENCE
                 </h3>
                 <h2 className="text-[34px] font-bold text-text-primary leading-tight mb-4">
-                  Focusing on delivering all my knowledge and experience to the
-                  companies
+                  {personalExperience?.title}
                 </h2>
                 <p className="text-text-subtle text-base font-light leading-relaxed">
-                  As Frontend Developer I have experience in creating responsive
-                  and user-friendly web applications using modern technologies
-                  like Angular, React, Next.js, Vue Tailwind CSS, and
-                  TypeScript. I am passionate about crafting seamless user
-                  experiences and writing clean, maintainable code.
+                  {personalExperience?.description}
                 </p>
               </div>
-
-              <p className="text-text-muted leading-relaxed mb-4">
-                Also I work creating mobile apliccations using React Native and
-                Ionic (Angular).
-              </p>
-
-              <p className="text-text-muted leading-relaxed mb-4">
-                I would like to share with you all my personal project is a
-                component library for React and Next.JS, which is open source
-                and available on GitHub. You can clik on "MY LIBRARY" button to
-                check the the library
-              </p>
 
               {/* Video Button */}
               <motion.div
